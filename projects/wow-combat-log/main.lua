@@ -7,11 +7,11 @@ local function exampleFunction(val1, val2)
 end
 
 local function testMain()
-  TEST("EXAMPLE - it can multiply two positive numbers")["expect"](exampleFunction(2, 1))["toEqual"](2)
-  TEST("EXAMPLE - it can multiply a positive number and a negative number")["expect"](exampleFunction(5, -1))["toEqual"](
+  TEST("EXAMPLE - it can multiply two positive numbers").expect(exampleFunction(2, 1)).toEqual(2)
+  TEST("EXAMPLE - it can multiply a positive number and a negative number").expect(exampleFunction(5, -1)).toEqual(
     -5
   )
-  TEST("EXAMPLE - it can multiply a number by 0")["expect"](exampleFunction(5, 0))["toEqual"](0)
+  TEST("EXAMPLE - it can multiply a number by 0").expect(exampleFunction(5, 0)).toEqual(0)
 end
 
 
@@ -35,11 +35,11 @@ if (arg[1] == "--test") then
         end
       end
 
-      expectTable["toEqual"] = toEqual
+      expectTable.toEqual = toEqual
       return expectTable
     end
 
-    testTable["expect"] = expect
+    testTable.expect = expect
     return testTable
   end
 
