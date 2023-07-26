@@ -33,12 +33,12 @@ At the end of this stage, your combat log should print the following to the term
 
 ```
 LeeroyJenkins entered combat
-LeeroyJenkins hit Onyxia for 25 damage
-Onyxia hit LeeroyJenkins for 80 damage
-LeeroyJenkins hit Onyxia for 32 damage
-LeeroyJenkins hit Onyxia for 24 damage
-Onyxia hit LeeroyJenkins for 74 damage
-Onyxia hit LeeroyJenkins for 184 fire damage
+LeeroyJenkins hit Onyxia 25 Physical
+Onyxia hit LeeroyJenkins 80 Physical
+LeeroyJenkins hit Onyxia 32 Physical
+LeeroyJenkins hit Onyxia 24 Physical
+Onyxia hit LeeroyJenkins 74 Physical
+Onyxia hit LeeroyJenkins 184 Fire (Critical)
 LeeroyJenkins has died
 ```
 
@@ -52,7 +52,7 @@ Before you write anything else, add the following test to your `testMain`
 
 ```lua
 function testMain()
-  TEST('it creates a damage log for a player')['expect'](makeLogEntry("DAMAGE", "LeeroyJenkins", "Onyxia", 24))['toEqual']("LeeroyJenkins hit Onyxia for 24 damage")
+  TEST('it creates a damage log for a player')['expect'](makeLogEntry("DAMAGE", "LeeroyJenkins", "Onyxia", 24))['toEqual']("LeeroyJenkins hit Onyxia 24 Physical")
 end
 ```
 
@@ -74,7 +74,7 @@ Now implement the function like so:
 
 ```lua
 local function makeLogEntry()
-  return "LeeroyJenkins hit Onyxia for 24 damage"
+  return "LeeroyJenkins hit Onyxia 24 Physical"
 end
 ```
 
@@ -123,9 +123,9 @@ Add another test:
 
 ```lua
 local function testMain()
-  TEST('it creates a damage log for a player')['expect'](makeLogEntry("DAMAGE", "LeeroyJenkins", "Onyxia", 24))['toEqual']("LeeroyJenkins hit Onyxia for 24 damage")
+  TEST('it creates a damage log for a player')['expect'](makeLogEntry("DAMAGE", "LeeroyJenkins", "Onyxia", 24))['toEqual']("LeeroyJenkins hit Onyxia 24 Physical")
   -- new test here
-  TEST('it creates a damage log for a mob')['expect'](makeLogEntry("DAMAGE", "Onyxia", "LeeroyJenkins", 60))['toEqual']("Onyxia hit LeeroyJenkins for 60 damage")
+  TEST('it creates a damage log for a mob')['expect'](makeLogEntry("DAMAGE", "Onyxia", "LeeroyJenkins", 60))['toEqual']("Onyxia hit LeeroyJenkins 60 Physical")
 end
 ```
 
@@ -134,7 +134,7 @@ then re-run your tests
 ```
 lua54 main.lua --test
 [+] Passed: it creates a damage log for a player
-[-] Failed: it creates a damage log for a mob - Expected value (Onyxia hit LeeroyJenkins for 60 damage) was not equal to (LeeroyJenkins hit Onyxia for 24 damage)
+[-] Failed: it creates a damage log for a mob - Expected value (Onyxia hit LeeroyJenkins 60 Physical) was not equal to (LeeroyJenkins hit Onyxia 24 Physical)
 ```
 
 Our new test is failing, so let's fix it.
@@ -143,7 +143,7 @@ Make the following change to `makeLogEntry`
 
 ```lua
 local function makeLogEntry()
-  return "Onyxia hit LeeroyJenkins for 60 damage"
+  return "Onyxia hit LeeroyJenkins 60 Physical"
 end
 ```
 
@@ -151,7 +151,7 @@ And rerun your tests:
 
 ```
 lua54 main.lua --test
-[-] Failed: it creates a damage log for a player - Expected value (LeeroyJenkins hit Onyxia for 24 damage) was not equal to (Onyxia hit LeeroyJenkins for 60 damage)
+[-] Failed: it creates a damage log for a player - Expected value (LeeroyJenkins hit Onyxia 24 Physical) was not equal to (Onyxia hit LeeroyJenkins 60 Physical)
 [+] Passed: it creates a damage log for a mob
 ```
 
@@ -164,3 +164,5 @@ Okay, let's summarize where we're at:
 **Time to code!**
 
 This stage will be complete when you can run your tests and have them both pass.
+
+Once your tests are passing, rework the code in your `main` function so that it uses the new `makeLogEntry` whenever possible.
