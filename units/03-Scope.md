@@ -6,7 +6,7 @@ Functions are the most important tool in your coding toolbox. Let's practice the
 
 ### Function scope
 
-Most every programming language implements the concept of "scope"s. Consider the following description of scopes, curtousy of Chat GPT:
+Most every programming language implements the concept of "scope"s. Consider the following description of scopes, courteously of Chat GPT:
 
 ```
 In programming, "scope" refers to where you can use and access different parts of your code. It's like having different rooms in a house, where each room has its own set of things you can use.

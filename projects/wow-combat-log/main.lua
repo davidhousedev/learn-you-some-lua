@@ -2,16 +2,13 @@ local function main()
   -- code goes here
 end
 
-local function exampleFunction(val1, val2)
-  return val1 * val2
+local function makeLogEntry()
+  return "Onyxia hit LeeroyJenkins for 60 damage"
 end
 
 local function testMain()
-  TEST("EXAMPLE - it can multiply two positive numbers")["expect"](exampleFunction(2, 1))["toEqual"](2)
-  TEST("EXAMPLE - it can multiply a positive number and a negative number")["expect"](exampleFunction(5, -1))["toEqual"](
-    -5
-  )
-  TEST("EXAMPLE - it can multiply a number by 0")["expect"](exampleFunction(5, 0))["toEqual"](0)
+  TEST('it creates a damage log for a player')['expect'](makeLogEntry("DAMAGE", "LeeroyJenkins", "Onyxia", 24))['toEqual']("LeeroyJenkins hit Onyxia for 24 damage")
+  TEST('it creates a damage log for a mob')['expect'](makeLogEntry("DAMAGE", "Onyxia", "LeeroyJenkins", 60))['toEqual']("Onyxia hit LeeroyJenkins for 60 damage")
 end
 
 
