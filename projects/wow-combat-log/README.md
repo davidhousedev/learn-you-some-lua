@@ -166,3 +166,44 @@ Okay, let's summarize where we're at:
 This stage will be complete when you can run your tests and have them both pass.
 
 Once your tests are passing, rework the code in your `main` function so that it uses the new `makeLogEntry` whenever possible.
+
+## Stage 3 - Refactor `makeLogEvent` to use tables
+
+There's a rule of thumb when it comes to functions. Generally, they shouldn't accept more than 3 distinct arguments. When you would need a function to accept more three arguments, it's best to refactor that function to accept _one_ argument, where that argument is complex data structure (in Lua, a table).
+
+> Note that this rule doesn't apply to functions which accept an arbitrary number of arguments, for example `print`. `print` can accept any number of arguments (e.g. 1, 2, 4, 99, 24020) and its behavior will adjust. That said, we haven't learned how to write these functions yet!
+
+For this stage, we're going to introduce the idea of an `Event` which uses a table to represent something that occurred in the past. We will represent three events, a damage event, a healing event, and a death event.
+
+We will use a `type` key to differentiate between these events:
+
+```lua
+local damageEvent = {type = "DAMAGE"}
+local healingEvent = {type = "HEALING"}
+local deathEvent = {type = "DEATH"}
+```
+
+The event data will be passed into `makeLogEntry`, which will read from the event data and `return` a formatted log entry as a string.
+
+```lua
+local function makeLogEntry(event)
+  -- TODO!
+end
+```
+
+For this stage, \*keep all of the `toEqual` parts of your tests exactly the same, but change the arguments passed into the `expect` portion of your test such that they accept events rather than multiple arguments.
+
+**Important:** you will need to add more data to each event type in order to be successful. For example, you will need to specify who triggered the event, who was the target of the event, what was the value associated with the event.
+
+Keep in mind that different events can contain different data, or represent data via different keys. It's up to you how you want to model the rest of your event data.
+
+This stage will be complete when your `makeLogEntry` function defines a single parameter, all of your tests are passing, and when you run your main program it outputs the following:
+
+```
+LeeroyJenkins hit Onyxia 25 Physical
+Onyxia hit LeeroyJenkins 80 Physical
+LeeroyJenkins hit Onyxia 32 Physical
+LeeroyJenkins hit Onyxia 24 Physical
+Onyxia hit LeeroyJenkins 74 Physical
+LeeroyJenkins has died
+```
