@@ -31,9 +31,19 @@ if (arg[1] == "--test") then
       if (value == nil) then
         return "nill"
       end
+      if (value == true) then
+        return "true"
+      end
+      if (value == false) then
+        return "false"
+      end
+      if (type(value) == "string") then
+        return "'" .. value .. "'"
+      end
 
       return value
     end
+
 
     local testTable = {}
     local function expect(got)
