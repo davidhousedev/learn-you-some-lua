@@ -207,3 +207,167 @@ LeeroyJenkins hit Onyxia 24 Physical
 Onyxia hit LeeroyJenkins 74 Physical
 LeeroyJenkins has died
 ```
+
+## Stage 4 - Tracking Player Health
+
+So far, the only thing that our project does is print log output. While it is _saying_ that LeeroyJenkins has died, there is something missing from oru code: Nothing is tracking LeeroyJenkins's health.
+
+Let's change that.
+
+### Implement `handleEvent`
+
+We're going to use a Table to track the health of LeeroyJenkins.
+
+Before you implement your function, start by writing the tests:
+
+```lua
+function testMain()
+  -- other tests above
+
+  --new test
+  local player = {
+    name = "LeeroyJenkins",
+    health = 20,
+  }
+  local mob = {
+    name = "Onyxia",
+    health = 4000
+  }
+  local event = {
+    type = "DAMAGE",
+    value = 100,
+    damageType = "Physical",
+    actor = player,
+    target = mob
+  }
+
+  -- this syntax, using dot notation, works just as well as the syntax above
+  -- feel free to choose whichever syntax you prefer
+  TEST("handles a damage event")
+      .expect(handleEvent(event))
+      .toEqual(true)
+  TEST("health is lowered")
+      .expect(mob.health)
+      .toEqual(3900)
+end
+```
+
+Run your tests, and verify that they fail because `handleEvent` doesn't exist.
+
+```
+attempt to call a nil value (global 'handleEvent')
+```
+
+Then stub out the function, but don't write any code within it:
+
+```lua
+function handleEvent(event)
+  -- todo
+end
+```
+
+and rerun your tests:
+
+```
+[-] Failed: handles a damage event - Expected value (true) was not equal to (nill)
+[-] Failed: health is lowered - Expected value (3900) was not equal to (4000)
+```
+
+Now that you have tests failing because your function isn't implemented, it's time to implement your function.
+
+Once the tests are passing, it's time to integrate `handleEvent` with `makeLogEntry`.
+
+### Refactor `makeLogEntry`
+
+The event structure that you implemented for `handleEvent` may be different than what you implemented in the prior stage for `makeLogEntry`. Let's revise your tests for `makeLogEntry` to ensure that they accept the same event structure as `handleEvent`. That will make it easier to pass events around.
+
+Modify your tests such that they look like this. Notice that the only thing that changes is the input to `makeLogEntry`; the output stays the same:
+
+```lua
+
+local player = {
+  name = "LeeroyJenkins",
+  health = 20,
+}
+local mob = {
+  name = "Onyxia",
+  health = 4000
+}
+local event = {
+  type = "DAMAGE",
+  value = 20,
+  damageType = "Physical",
+  actor = player,
+  target = mob
+}
+
+TEST("basic damage event")
+.expect(makeLogEntry(event))
+.toEqual("LeeroyJenkins hit Onyxia 20 Physical")
+
+local player = {
+  name = "LeeroyJenkins",
+  health = 20,
+}
+
+local event = {
+  type = "HEALING",
+  value = 30,
+  damageType = "Holy",
+  actor = player,
+  target = player
+}
+
+TEST("basic healing event")
+    .expect(makeLogEntry(event))
+    .toEqual("LeeroyJenkins healed themselves 30 Holy")
+```
+
+Run your tests, watch them fail, then modify your `makeLogEntry` code to get the tests passing.
+
+### Bring everything together within `handleEvent`
+
+Now that both `handleEvent` and `makeLogEntry` accept the same data, modify `handleEvent` such that it prints the output of `makeLogEntry`:
+
+```lua
+function handleEvent(event)
+  if event.type == "DAMAGE" then
+    event.target.health = event.target.health - event.value
+  end
+
+  print(makeLogEntry(event)) -- new code here
+
+  return true
+end
+```
+
+To finish this stage, you have three tasks:
+
+1. Within `main`, utilize `handleEvent` to print out all damage events
+2. Write tests for `handleEvent` to handle a `HEALING` event such that the `event.target` is healed by the `value` of the healing event
+3. Extend `main` such that all damage and healing occurs via `handleEvent`. In other words, `main` _should not_ call `makeLogEntry` at all, it should only call `print` or `handleEvent`
+
+When you're done, your `main` function should look something like this:
+
+```lua
+  -- create tables for leeroy and onyxia
+
+  print('LeeroyJenkins has entered combat') -- the enter combat feature isn't implemented yet
+  -- note, you may choose to create variables for your events then pass them into handle event
+  -- or you may create the table for the event when you call the function itself
+  -- the choice is yours
+  handleEvent(--[[ your code here ]])
+  handleEvent(--[[ your code here ]])
+  handleEvent(--[[ your code here ]])
+  handleEvent(--[[ your code here ]])
+  handleEvent(--[[ your code here ]])
+  print("Onyxia hit LeeroyJenkins 184 Fire (Critical)") -- the critical damage feature isn't implemented yet
+  print("LeeroyJenkins has died") -- the death event feature isn't implemented yet
+```
+
+\*_Bonus Challenge_
+
+If you're feeling up for it, try implementing the next few features on your own:
+
+- Allowing damage to be marked as critical
+- Automatically printing when someone has died, so you can remove your last `print` statement from `main`
